@@ -1,10 +1,9 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 
 if (!hasProperty('DISABLE_ERROR_PRONE')) {
     apply plugin: "net.ltgt.errorprone"
 }
-group = 'com.github.ant074'
+
 tasks.withType(JavaCompile) {
     options.fork = true
 }
