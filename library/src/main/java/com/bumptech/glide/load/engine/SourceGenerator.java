@@ -42,13 +42,17 @@ class SourceGenerator implements DataFetcherGenerator,
   public boolean startNext() {
     if (dataToCache != null) {
       Object data = dataToCache;
-      dataToCache = null;
       cacheData(data);
     }
 
-    if (sourceCacheGenerator != null && sourceCacheGenerator.startNext()) {
+    if (sourceCacheGenerator != null){
+      if(!sourceCacheGenerator.startNext() && dataToCache!=null) {
+        onLoadBack(dataToCache);
+      }
+      dataToCache = null;
       return true;
     }
+    dataToCache = null;
     sourceCacheGenerator = null;
 
     loadData = null;
@@ -112,6 +116,11 @@ class SourceGenerator implements DataFetcherGenerator,
       cb.onDataFetcherReady(loadData.sourceKey, data, loadData.fetcher,
           loadData.fetcher.getDataSource(), originalKey);
     }
+  }
+
+  private void onLoadBack(Object data){
+    cb.onDataFetcherReady(loadData.sourceKey, data, loadData.fetcher,
+            loadData.fetcher.getDataSource(), originalKey);
   }
 
   @Override
